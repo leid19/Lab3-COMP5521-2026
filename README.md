@@ -65,8 +65,8 @@ Optional Etherscan verification can be enabled after deployment by setting `VERI
 By default, tokens are minted to the account represented by `PRIVATE_KEY`:
 
 ```bash
-npm hardhat run scripts/interact.js --network sepolia
-npm hardhat run scripts/checkBalance.js --network sepolia
+npx hardhat run scripts/interact.js --network sepolia
+npx hardhat run scripts/checkBalance.js --network sepolia
 ```
 
 To mint to another MetaMask account, set `MINT_TO` in `.env`. `MINT_AMOUNT` is expressed in whole MST tokens.
