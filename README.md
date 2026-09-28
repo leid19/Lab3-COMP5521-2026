@@ -41,7 +41,7 @@ The local tests cover the token metadata, owner-only minting, and balance update
 ## 3. Deploy to Sepolia
 
 ```bash
-npm run deploy:sepolia
+npx hardhat run scripts/deploy.js --network sepolia
 ```
 
 The script prints the deployer, chain ID, transaction hash, and contract address. Copy the printed `MST_ADDRESS=...` line into `.env`.
@@ -53,8 +53,8 @@ Optional Etherscan verification can be enabled after deployment by setting `VERI
 By default, tokens are minted to the account represented by `PRIVATE_KEY`:
 
 ```bash
-npm run interact:sepolia
-npm run balance:sepolia
+npm hardhat run scripts/interact.js --network sepolia
+npm hardhat run scripts/checkBalance.js --network sepolia
 ```
 
 To mint to another MetaMask account, set `MINT_TO` in `.env`. `MINT_AMOUNT` is expressed in whole MST tokens.
