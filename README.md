@@ -15,7 +15,7 @@ MST is an educational token, not a production stablecoin. It has no price peg or
 
 ```bash
 git clone <repository-url>
-cd Lab3-COMP5521-2025
+cd Lab3-COMP5521-2026
 npm install
 ```
 
