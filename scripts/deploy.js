@@ -1,37 +1,41 @@
 const hre = require("hardhat");
 
 async function main() {
-  console.log("Deploying MySimpleToken contract...");
+  const [deployer] = await hre.ethers.getSigners();
+  const network = await hre.ethers.provider.getNetwork();
 
-  // Get the contract factory
+  console.log("Deploying MySimpleToken...");
+  console.log(`Deployer: ${deployer.address}`);
+  console.log(`Chain ID: ${network.chainId}`);
+
   const MySimpleToken = await hre.ethers.getContractFactory("MySimpleToken");
-  
-  // Deploy the contract
   const token = await MySimpleToken.deploy();
-
-  // Wait for the deployment to be mined
   await token.waitForDeployment();
 
   const contractAddress = await token.getAddress();
+  const deploymentTx = token.deploymentTransaction();
   console.log(`MySimpleToken deployed to: ${contractAddress}`);
+  if (deploymentTx) {
+    console.log(`Deployment transaction: ${deploymentTx.hash}`);
+  }
 
-  // Wait for a few block confirmations to ensure Etherscan has indexed the contract
-  await token.deploymentTransaction().wait(5);
+  console.log(`\nCopy this address into .env:\nMST_ADDRESS=${contractAddress}`);
 
-  // Verify the contract on Etherscan
-    console.log("Verifying contract on Etherscan...");
-  try {
-    await hre.run("verify:verify", {
-      address: contractAddress,
-      constructorArguments: [],
-    });
-    console.log("Contract verified successfully!");
-  } catch (error) {
-    // Handle the "already verified" error gracefully
-    if (error.message.toLowerCase().includes("already verified")) {
-      console.log("Contract is already verified.");
-    } else {
-      console.error(error);
+  if (process.env.VERIFY_CONTRACT === "true") {
+    console.log("\nVerifying contract on Etherscan...");
+    try {
+      await deploymentTx.wait(5);
+      await hre.run("verify:verify", {
+        address: contractAddress,
+        constructorArguments: [],
+      });
+      console.log("Contract verified successfully.");
+    } catch (error) {
+      if (error.message.toLowerCase().includes("already verified")) {
+        console.log("Contract is already verified.");
+      } else {
+        console.error("Verification failed:", error.message);
+      }
     }
   }
 }

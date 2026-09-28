@@ -7,15 +7,15 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
  * @title MySimpleToken
- * @dev A very simple ERC20 token for educational purposes.
- * - It inherits from OpenZeppelin's ERC20 implementation.
- * - It uses Ownable to ensure that only the contract deployer (owner) can mint new tokens.
+ * @dev An educational ERC20 token for the first project-introduction lesson.
+ *
+ * MST is not a production stablecoin: it has no peg, reserves, or price
+ * mechanism. It gives students a small token contract to deploy and use in
+ * the later HTLC project.
  */
 contract MySimpleToken is ERC20, Ownable {
 
-    // Constructor, executed once during deployment
-    // Initialize the ERC20 token with a name and symbol
-    // Set the contract deployer as the initial owner
+    // The deployer becomes the owner and is therefore allowed to mint.
     constructor() ERC20("My Simple Token", "MST") Ownable(msg.sender) {}
 
     /**

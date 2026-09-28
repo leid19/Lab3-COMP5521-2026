@@ -1,33 +1,30 @@
 const hre = require("hardhat");
-
-// Copy the deployed contract address from the deploy script output
-const CONTRACT_ADDRESS = "xxx";
+require("dotenv").config();
 
 async function main() {
-  console.log("Interacting with MySimpleToken contract...");
+  const contractAddress = process.env.MST_ADDRESS;
+  if (!contractAddress) {
+    throw new Error("MST_ADDRESS is missing. Add the deployed address to .env first.");
+  }
 
-  // Get the signer (the account to interact with the contract)
   const [signer] = await hre.ethers.getSigners();
-  console.log(`Interacting with account: ${signer.address}`);
+  const token = await hre.ethers.getContractAt("MySimpleToken", contractAddress, signer);
+  const decimals = await token.decimals();
+  const mintTo = process.env.MINT_TO || signer.address;
+  const mintAmount = process.env.MINT_AMOUNT || "1000";
 
-  // Get the deployed contract instance
-  const tokenContract = await hre.ethers.getContractAt("MySimpleToken", CONTRACT_ADDRESS, signer);
+  console.log("Interacting with MySimpleToken...");
+  console.log(`Signer: ${signer.address}`);
+  console.log(`Mint recipient: ${mintTo}`);
+  console.log(`Mint amount: ${mintAmount} MST`);
+  console.log(`Initial balance: ${hre.ethers.formatUnits(await token.balanceOf(mintTo), decimals)} MST`);
 
-  // 1. Check initial balance
-  let balance = await tokenContract.balanceOf(signer.address);
-  console.log(`Initial balance: ${hre.ethers.formatUnits(balance, 18)} MST`);
-
-  // 2. Mint 1000 new tokens to self
-  console.log("Minting 1000 tokens to self...");
-  const mintTx = await tokenContract.mint(signer.address, hre.ethers.parseUnits("1000", 18));
-  
-  // 3. Wait for the transaction to be mined
+  const mintTx = await token.mint(mintTo, hre.ethers.parseUnits(mintAmount, decimals));
   await mintTx.wait();
-  console.log(`Mint transaction successful: ${mintTx.hash}`);
+  console.log(`Mint transaction confirmed: ${mintTx.hash}`);
 
-  // 4. Check new balance
-  balance = await tokenContract.balanceOf(signer.address);
-  console.log(`New balance: ${hre.ethers.formatUnits(balance, 18)} MST`);
+  const finalBalance = await token.balanceOf(mintTo);
+  console.log(`Final balance: ${hre.ethers.formatUnits(finalBalance, decimals)} MST`);
 }
 
 main().catch((error) => {
