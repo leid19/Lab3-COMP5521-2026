@@ -19,11 +19,23 @@ cd Lab3-COMP5521-2026
 npm install
 ```
 
-Copy `.env.example` to `.env`, then fill in your own values. Never commit `.env` or share your private key:
+Copy `.env.example` to `.env`, then fill in your own values. The variables are:
+
+- `SEPOLIA_RPC_URL`: your Sepolia RPC endpoint. Create or view an Infura endpoint at [https://app.infura.io/key/active-endpoints](https://app.infura.io/key/active-endpoints).
+- `PRIVATE_KEY`: the private key of your disposable Sepolia testnet account. In MetaMask, select the account, open the account menu, choose **Account details**, and select **Show private key**. Never commit or share this value.
+- `ETHERSCAN_API_KEY`: an Etherscan API key for optional contract-source verification. Follow [https://docs.etherscan.io/getting-an-api-key](https://docs.etherscan.io/getting-an-api-key) to create one.
+- `VERIFY_CONTRACT`: set this to `true` only when you want the deployment script to verify the contract on Etherscan. Keep it `false` for the basic classroom demo.
+- `MST_ADDRESS`: leave empty before deployment; copy the deployed contract address here afterward.
+- `MINT_TO`: optional recipient address for newly minted MST. Leave empty to mint to the account represented by `PRIVATE_KEY`.
+- `MINT_AMOUNT`: the number of MST tokens to mint, expressed in whole tokens.
+
+Never commit `.env` or share your private key:
 
 ```env
 SEPOLIA_RPC_URL="https://sepolia.infura.io/v3/YOUR_PROJECT_ID"
 PRIVATE_KEY="YOUR_TESTNET_PRIVATE_KEY"
+ETHERSCAN_API_KEY="YOUR_ETHERSCAN_API_KEY"
+VERIFY_CONTRACT="false"
 MST_ADDRESS=""
 MINT_TO=""
 MINT_AMOUNT="1000"
